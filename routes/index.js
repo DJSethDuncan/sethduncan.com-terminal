@@ -78,16 +78,17 @@ function processCommand (command) {
       break
     case '.cv':
       commandResponse.text = cv
-      break;
+      break
     case 'ls':
       for (file in fileList) {
           commandResponse.text += `[[gb;${primaryColor};black]` + file + `] `
       }
-      break;
+      break
     case 'ls -l':
       for (file in fileList) {
           commandResponse.text += filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + file + `]\n`
       }
+      break
     case 'ls -la':
       for (hiddenFile in hiddenFileList) {
                 commandResponse.text += filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + hiddenFile + `]\n`
@@ -95,7 +96,7 @@ function processCommand (command) {
             for (file in fileList) {
                 commandResponse.text += filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + file + `]\n`
             }
-      break;
+      break
     default:
       commandResponse.text = 'Unknown command "' + command + '"'
       break
