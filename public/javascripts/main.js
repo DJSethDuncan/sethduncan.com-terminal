@@ -11,6 +11,7 @@ $(function() {
         term.pause();
         $.post('/cmd', {command: command}).then(function(response) {
             var consoleText = '';
+            console.log(response);
             if (response.status == 'ok') {
                 if (response.text !== '') {
                     consoleText = response.text;
