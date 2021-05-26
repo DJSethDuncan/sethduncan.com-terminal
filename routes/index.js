@@ -40,7 +40,7 @@ var hiddenFileList = {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' })
+  res.render('index', { title: 'sethduncan.com' })
 })
 
 router.post('/cmd', function(req, res, next) {
