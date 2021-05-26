@@ -2,7 +2,7 @@
 
 My website converted to a terminal.
 
-[https://www.sethduncan.com](sethduncan.com)
+[sethduncan.com](https://www.sethduncan.com)
 
 ## Platform
 
