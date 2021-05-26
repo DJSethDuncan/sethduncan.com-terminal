@@ -15,6 +15,10 @@ Marchex
 February 2015 - Present
 `
 
+var sethrc = `
+alias example='example'
+`
+
 var helpText = `
 Commands:
 
@@ -33,7 +37,10 @@ var fileList = {
 
 var hiddenFileList = {
     '.cv': {
-        descriptiont: 'My resume'
+        description: 'My resume'
+    },
+    '.sethrc': {
+        description: 'Seth console config'
     }
 }
 
@@ -78,6 +85,9 @@ function processCommand (command) {
       break
     case '.cv':
       commandResponse.text = cv
+      break
+    case 'cat .sethrc':
+      commandResponse.text = sethrc
       break
     case 'ls':
       for (file in fileList) {
