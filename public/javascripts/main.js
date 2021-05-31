@@ -2,7 +2,7 @@ var primaryColor = 'lightblue'
 var terminalParams = {
     greetings: `Welcome to [[gb;${primaryColor};black]sethduncan.com] \n \n`,
     name: 'sethduncan.com',
-    prompt: `[[gb;pink;black]$][[gb;purple;black]>] `,
+    prompt: `C:\\> `,
     checkArity: false,
 }
 
@@ -22,7 +22,7 @@ $(function() {
             } else {
                 consoleText = 'Unknown command';
             }
-            term.echo(`\n${consoleText}\n`).resume();
+            term.echo(`\n${consoleText}`).resume();
         });
     }, terminalParams);
 });
