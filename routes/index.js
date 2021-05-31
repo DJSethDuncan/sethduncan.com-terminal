@@ -4,6 +4,7 @@ var router = express.Router()
 var codeURL = 'https://www.github.com/DJSethDuncan'
 var musicURL = 'https://www.soundcloud.com/sethduncanmusic'
 var blogURL = 'https://blog.sethduncan.com'
+var marioURL = 'https://blog.sethduncan.com/mario'
 var filePermissionText = '---x------ root root'
 var primaryColor = 'lightblue'
 
@@ -23,18 +24,18 @@ alias example='example'
 var helpText = `
 Commands:
 
-[[gb;${primaryColor};black]ls]              List files
+[[gb;${primaryColor};black]dir]             Displays directory of files and directories stored on disk
 [[gb;${primaryColor};black]help]            You already know what this does
 `
 
 var fileList = {
-    code: {
+    'code.exe': {
         description: 'Secret software DO NOT OPEN'
     },
-    music: {
+    'music.exe': {
         description: 'My sick tunes'
     },
-    resume: {
+    'resume.bat': {
         description: 'My resume'
     }
 }
@@ -45,6 +46,9 @@ var hiddenFileList = {
     },
     '.blog': {
         description: 'My blog'
+    },
+    '.mario': {
+        description: 'Mario'
     }
 }
 
@@ -80,27 +84,39 @@ function processCommand (command) {
       commandResponse.text = helpText
       break
     case 'code':
+    case 'code.exe':
       commandResponse.text = 'Loading code...'
       commandResponse.url = codeURL
       break
     case 'music':
+    case 'music.exe':
       commandResponse.text = 'Loading music...'
       commandResponse.url = musicURL
       break
-    case '.blog':
-      commandResponse.text = 'Loading blog...'
-      commandResponse.url = blogURL
     case 'resume':
+    case 'resume.exe':
       commandResponse.text = cv
       break
     case '.sethrc':
     case 'cat .sethrc':
       commandResponse.text = sethrc
       break
+    case '.blog':
+      commandResponse.text = 'Loading blog...'
+      commandResponse.url = blogURL
+      break;
+    case '.mario':
+      commandResponse.text = 'Loading Mario...'
+      commandResponse.url = marioURL
+      break;
+    case 'dir':
     case 'ls':
+      i = 0;
       for (file in fileList) {
-          commandResponse.text += `[[gb;${primaryColor};black]` + file + `] `
+          commandResponse.text += '05/30/2021 02:33 PM      ' + file + '\n'
+          i++;
       }
+      commandResponse.text += '         ' + i + ' File(s)       1,984 bytes';
       break
     case 'ls -l':
       for (file in fileList) {
