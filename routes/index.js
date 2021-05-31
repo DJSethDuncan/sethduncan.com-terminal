@@ -3,6 +3,7 @@ var router = express.Router()
 
 var codeURL = 'https://www.github.com/DJSethDuncan'
 var musicURL = 'https://www.soundcloud.com/sethduncanmusic'
+var blogURL = 'https://blog.sethduncan.com'
 var filePermissionText = '---x------ root root'
 var primaryColor = 'lightblue'
 
@@ -41,6 +42,9 @@ var fileList = {
 var hiddenFileList = {
     '.sethrc': {
         description: 'Seth console config'
+    },
+    '.blog': {
+        description: 'My blog'
     }
 }
 
@@ -83,10 +87,13 @@ function processCommand (command) {
       commandResponse.text = 'Loading music...'
       commandResponse.url = musicURL
       break
-    case '.cv':
+    case '.blog':
+      commandResponse.text = 'Loading blog...'
+      commandResponse.url = blogURL
     case 'resume':
       commandResponse.text = cv
       break
+    case '.sethrc':
     case 'cat .sethrc':
       commandResponse.text = sethrc
       break
