@@ -32,13 +32,13 @@ var fileList = {
     },
     music: {
         description: 'My sick tunes'
+    },
+    resume: {
+        description: 'My resume'
     }
 }
 
 var hiddenFileList = {
-    '.cv': {
-        description: 'My resume'
-    },
     '.sethrc': {
         description: 'Seth console config'
     }
@@ -84,6 +84,7 @@ function processCommand (command) {
       commandResponse.url = musicURL
       break
     case '.cv':
+    case 'resume':
       commandResponse.text = cv
       break
     case 'cat .sethrc':
