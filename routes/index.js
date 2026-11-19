@@ -25,33 +25,40 @@ var helpText = `
 Commands:
 
 [[gb;${primaryColor};black]dir]             Displays directory of files and directories stored on disk
+[[gb;${primaryColor};black]cat <file>]      Displays the contents of a file
+[[gb;${primaryColor};black]<file>]          Runs a file
 [[gb;${primaryColor};black]help]            You already know what this does
 `
 
-var fileList = {
-    'code.exe': {
-        description: 'Secret software DO NOT OPEN'
-    },
-    'music.exe': {
-        description: 'My sick tunes'
-    },
-    'resume.bat': {
-        description: 'My resume'
-    }
-}
-
-var hiddenFileList = {
+// contents: printed by `cat <file>`, and by `<file>` when there is no url
+// url: opened by `<file>`
+var files = {
     '.sethrc': {
-        description: 'Seth console config'
+        contents: sethrc,
+        hidden: true
     },
     '.blog': {
-        description: 'My blog'
+        contents: 'My blog',
+        url: blogURL,
+        hidden: true
     },
     '.mario': {
-        description: 'Mario'
+        contents: 'Mario',
+        url: marioURL,
+        hidden: true
+    },
+    'code.exe': {
+        contents: 'Secret software DO NOT OPEN',
+        url: codeURL
+    },
+    'music.exe': {
+        contents: 'My sick tunes',
+        url: musicURL
+    },
+    'resume.bat': {
+        contents: cv
     }
 }
-
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -68,10 +75,30 @@ router.post('/cmd', function(req, res, next) {
 })
 
 // functions
+
+// matches "music.exe" and "music"
+function findFile (name) {
+  return Object.keys(files).find(function (fileName) {
+    return fileName === name || fileName.replace(/(.)\.[^.]+$/, '$1') === name
+  })
+}
+
+function listFiles (includeHidden) {
+  return Object.keys(files).filter(function (fileName) {
+    return includeHidden || !files[fileName].hidden
+  })
+}
+
+function longListing (fileNames) {
+  return fileNames.map(function (fileName) {
+    return filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + fileName + `]\n`
+  }).join('')
+}
+
 function processCommand (command) {
 
   command = command.trim()
-  
+
   var commandResponse = {
     'status': 'ok',
     'data': [],
@@ -79,60 +106,41 @@ function processCommand (command) {
     'url': ''
   }
 
+  var args = command.split(/\s+/)
+
   switch (command) {
     case 'help':
       commandResponse.text = helpText
       break
-    case 'code':
-    case 'code.exe':
-      commandResponse.text = 'Loading code...'
-      commandResponse.url = codeURL
-      break
-    case 'music':
-    case 'music.exe':
-      commandResponse.text = 'Loading music...'
-      commandResponse.url = musicURL
-      break
-    case 'resume':
-    case 'resume.exe':
-      commandResponse.text = cv
-      break
-    case '.sethrc':
-    case 'cat .sethrc':
-      commandResponse.text = sethrc
-      break
-    case '.blog':
-      commandResponse.text = 'Loading blog...'
-      commandResponse.url = blogURL
-      break;
-    case '.mario':
-      commandResponse.text = 'Loading Mario...'
-      commandResponse.url = marioURL
-      break;
     case 'dir':
     case 'ls':
-      i = 0;
-      for (file in fileList) {
-          commandResponse.text += '05/30/2021 02:33 PM      ' + file + '\n'
-          i++;
-      }
-      commandResponse.text += '         ' + i + ' File(s)       1,984 bytes';
+      var visibleFiles = listFiles(false)
+      commandResponse.text = visibleFiles.map(function (fileName) {
+        return '05/30/2021 02:33 PM      ' + fileName + '\n'
+      }).join('')
+      commandResponse.text += '         ' + visibleFiles.length + ' File(s)       1,984 bytes'
       break
     case 'ls -l':
-      for (file in fileList) {
-          commandResponse.text += filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + file + `]\n`
-      }
+      commandResponse.text = longListing(listFiles(false))
       break
     case 'ls -la':
-      for (hiddenFile in hiddenFileList) {
-                commandResponse.text += filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + hiddenFile + `]\n`
-            }
-            for (file in fileList) {
-                commandResponse.text += filePermissionText + ` May 24 00:41 [[gb;${primaryColor};black]` + file + `]\n`
-            }
+      commandResponse.text = longListing(listFiles(true))
       break
     default:
-      commandResponse.text = 'Unknown command "' + command + '"'
+      if (args[0] === 'cat' && args.length === 2) {
+        var catFile = findFile(args[1])
+        commandResponse.text = catFile ? files[catFile].contents : 'cat: ' + args[1] + ': No such file'
+      } else if (findFile(command)) {
+        var file = files[findFile(command)]
+        if (file.url) {
+          commandResponse.text = 'Loading ' + command.replace(/^\./, '').replace(/(.)\.[^.]+$/, '$1') + '...'
+          commandResponse.url = file.url
+        } else {
+          commandResponse.text = file.contents
+        }
+      } else {
+        commandResponse.text = 'Unknown command "' + command + '"'
+      }
       break
   }
 
