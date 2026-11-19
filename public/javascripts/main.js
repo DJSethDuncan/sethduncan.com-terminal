@@ -1,6 +1,15 @@
 var primaryColor = 'lightblue'
+var splashText = [
+    '/******************************************/',
+    '/                                          /',
+    '/     W E L C O M E   T O                  /',
+    '/                                          /',
+    '/              sethduncan.com              /',
+    '/                                          /',
+    '/******************************************/'
+].join('\n')
 var terminalParams = {
-    greetings: `Welcome to [[gb;${primaryColor};black]sethduncan.com] \n \n`,
+    greetings: `[[;${primaryColor};black]${splashText}]\n\nType [[gb;${primaryColor};black]help] to see the commands.\n`,
     name: 'sethduncan.com',
     prompt: `C:\\> `,
     checkArity: false,
